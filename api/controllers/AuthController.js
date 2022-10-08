@@ -1,6 +1,7 @@
 import User from "../models/User.js"
 import bcrypt from "bcrypt";
 import error from "../utils/error.js"
+import response from "../utils/response.js";
 import jwt from "jsonwebtoken";
 
 let AuthControllers = {}
@@ -13,10 +14,11 @@ AuthControllers.register = async (req,res,next)=>{
             username:req.body.username,
             email:req.body.email,
             password:hashPassword,
-        })
+        });
 
         await newUser.save();
-        res.status(200).send("User has been created.")
+        res.status(200).send(response.create(true,[],"User has been created."));
+        
     } catch (err) {
         next(err);
     }
@@ -25,7 +27,7 @@ AuthControllers.register = async (req,res,next)=>{
 AuthControllers.login = async (req,res,next)=>{
     try {
 
-        const user = await User.findOne({username:req.body.username})
+        const user = await User.findOne({username:req.body.username}).select('+password').select('+isAdmin')
         if(!user) return next(error.create(404,"User not found."));
 
         const isPasswordCorrect = await bcrypt.compare(req.body.password,user.password);
@@ -35,14 +37,16 @@ AuthControllers.login = async (req,res,next)=>{
             {id:user._id,isAdmin:user.isAdmin},
             process.env.JWT
         );
+        
+        delete user._doc.password;
+        delete user._doc.isAdmin;
 
-        const {password,isAdmin,...otherDetail} = user._doc;
         res
           .cookie("access_token",token,{
             httpOnly:true,
           })
           .status(200)
-          .json({...otherDetail});
+          .send(response.create(true,user._doc,null));
     } catch (err) {
         next(err);
     }

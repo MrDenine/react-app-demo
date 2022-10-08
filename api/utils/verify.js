@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 let Verify = {}
 Verify.token = (req,res,next)=>{
-    const token = req.cookie.access_token;
+    const token = req.cookies.access_token;
     if(!token) return next(error.create(401,"You are not authentication."))
 
     jwt.verify(token,process.env.JWT ,(err,user)=>{
@@ -13,7 +13,7 @@ Verify.token = (req,res,next)=>{
     });
 }
 Verify.user = (req,res,next)=>{
-    Verify.token(req,res,()=>{
+    Verify.token(req,res,next,()=>{
         if(req.user.id === req.params.id || req.user.isAdmin){
             next();
         } else{
@@ -23,7 +23,7 @@ Verify.user = (req,res,next)=>{
 }
 
 Verify.admin = (req,res,next)=>{
-    Verify.token(req,res,()=>{
+    Verify.token(req,res,next,()=>{
         if(req.user.isAdmin){
             next();
         } else{

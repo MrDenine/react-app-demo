@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-const { Schema } = mongoose;
 
 const UserSchema = new mongoose.Schema({
     username:{
@@ -14,11 +13,13 @@ const UserSchema = new mongoose.Schema({
     },
     password:{
         type:String,
-        require:true 
+        require:true,
+        select: false
     },
     isAdmin:{
         type:Boolean,
-        default:false
+        default:false,
+        select: false
     },
 },
 {
