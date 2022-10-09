@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 let AuthControllers = {}
 
 AuthControllers.register = async (req,res,next)=>{
+    const data = []
     try {
         const salt = bcrypt.genSaltSync(10);
         const hashPassword = await bcrypt.hash(req.body.password,salt);
@@ -17,7 +18,7 @@ AuthControllers.register = async (req,res,next)=>{
         });
 
         await newUser.save();
-        res.status(200).send(response.create(true,[],"User has been created."));
+        res.status(200).send(response.create(true,data,"User has been created."));
         
     } catch (err) {
         next(err);
@@ -25,8 +26,8 @@ AuthControllers.register = async (req,res,next)=>{
 }
 
 AuthControllers.login = async (req,res,next)=>{
+    const data = []
     try {
-
         const user = await User.findOne({username:req.body.username}).select('+password').select('+isAdmin')
         if(!user) return next(error.create(404,"User not found."));
 
@@ -41,12 +42,14 @@ AuthControllers.login = async (req,res,next)=>{
         delete user._doc.password;
         delete user._doc.isAdmin;
 
+        data.push(user._doc);
+
         res
           .cookie("access_token",token,{
             httpOnly:true,
           })
           .status(200)
-          .send(response.create(true,user._doc,null));
+          .send(response.create(true,data,null));
     } catch (err) {
         next(err);
     }

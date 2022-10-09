@@ -46,9 +46,9 @@ const Hotel = () => {
     let newSlideNumber;
 
     if (direction === "l") {
-      newSlideNumber = slideNumber === 0 ? 5 : slideNumber - 1;
+      newSlideNumber = slideNumber === 0 ? 5 : slideNumber - 1; //boolean
     } else {
-      newSlideNumber = slideNumber === 5 ? 0 : slideNumber + 1;
+      newSlideNumber = slideNumber === 5 ? 0 : slideNumber + 1; //boolean
     }
 
     setSlideNumber(newSlideNumber)

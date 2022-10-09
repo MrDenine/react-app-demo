@@ -5,6 +5,7 @@ import response from "../utils/response.js"
 let roomControllers = {}
 
 roomControllers.create = async (req,res,next)=>{
+    const data = [];
     const hotelId = req.params.hotelid;
     const newRoom = new Room(req.body);
     try {
@@ -14,38 +15,41 @@ roomControllers.create = async (req,res,next)=>{
         } catch (err) {
             next(err);
         }
-        res.status(200).send(response.create(true,[saveRoom],null));
+        data.push(saveRoom);
+        res.status(200).send(response.create(true,data,null));
     } catch (err){
         next(err);
     }
 }
 
 roomControllers.update = async (req,res,next)=>{
-    
+    const data = [];
     try {
         const updateRoom = await Room.findByIdAndUpdate(
             req.params.id,
             {$set:req.body},
             {new : true}
         )
-        res.status(200).send(response.create(true,[updateRoom],null));
+        data.push(updateRoom);
+        res.status(200).send(response.create(true,data,null));
     } catch (err) {
         next(err);
     }
 };
 
 roomControllers.delete = async (req,res,next)=>{
+    const data = [];
     const hotelId = req.params.hotelid;
     try {
         const room = await Room.findById(
             req.params.id,
         )
-        if(room == null) return res.status(200).send(response.create(false,[],"Room is invalid."));
+        if(room == null) return res.status(200).send(response.create(false,data,"Room is invalid."));
 
         const hotel = await Hotel.findById(
             req.params.hotelid,
         )
-        if(hotel == null) return res.status(200).send(response.create(false,[],"Hotel is invalid."));
+        if(hotel == null) return res.status(200).send(response.create(false,data,"Hotel is invalid."));
 
         await Room.findByIdAndDelete(
             req.params.id
@@ -57,7 +61,7 @@ roomControllers.delete = async (req,res,next)=>{
             next(err);
         }
 
-        res.status(200).send(response.create(true,[],"Room has been deleted."));
+        res.status(200).send(response.create(true,data,"Room has been deleted."));
 
     } catch (err) {
         next(err);
@@ -65,20 +69,24 @@ roomControllers.delete = async (req,res,next)=>{
 };
 
 roomControllers.getById = async(req,res,next)=>{
+    const data = [];
     try {
         const room = await Room.findById(
             req.params.id,
         )
-        res.status(200).send(response.create(true,[room],null));
+        data.push(room)
+        res.status(200).send(response.create(true,data,null));
     } catch (err) {
         next(err);
     }
 };
 
 roomControllers.get = async (req,res,next)=>{
+    const data = [];
     try {
         const rooms = await Room.find()
-        res.status(200).send(response.create(true,[rooms],null));
+        data.push(rooms)
+        res.status(200).send(response.create(true,data,null));
     } catch (err) {
         next(err);
     }

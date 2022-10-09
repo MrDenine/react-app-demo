@@ -31,6 +31,8 @@ router.delete("/hotel/delete/:id",Verify.admin,HotelControllers.delete);
 //GET
 router.get("/hotel/get/:id", HotelControllers.getById);
 router.get("/hotel/get", HotelControllers.get );
+router.get("/hotel/countbycity", HotelControllers.countByCity );
+router.get("/hotel/countbytype", HotelControllers.get );
 
 //---------ROOMS---------//
 //CREATE

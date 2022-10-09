@@ -7,7 +7,7 @@ let response = {};
  */
 
 response.create = (success,data,message) =>{
-    return {"success":success || false,"data":data || [],"message":message || null};
+    return {"success":success || false,"data":data||[],"message":message || null};
 }
 
 export default response;
