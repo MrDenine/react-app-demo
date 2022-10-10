@@ -1,6 +1,14 @@
+import useApi from "../../hooks/useApi.js";
 import "./featured.css";
 
 const Featured = () => {
+
+  // const data1 = useApi("http://localhost:8800/api/v1/hotel/countbycity?cities=bangkok,suratthani","GET","")
+  // console.log(data1);
+
+  // const data2 = useApi("http://localhost:8800/api/v1/hotel/get","GET","")
+  // console.log(data2);
+
   return (
     <div className="featured">
       <div className="featuredItem">
@@ -10,7 +18,7 @@ const Featured = () => {
           className="featuredImg"
         />
         <div className="featuredTitles">
-          <h1>Dublin</h1>
+          <h1></h1>
           <h2>123 properties</h2>
         </div>
       </div>

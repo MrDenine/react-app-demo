@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import apiv1 from "./routes/api.v1.js"
 import cookieParser from "cookie-parser";
+import cors from 'cors';
 
 const app = express();
 dotenv.config();
@@ -26,6 +27,13 @@ mongoose.connection.on("disconnected",()=>{
 });
 
 //middlewares
+app.use(cors({
+    'allowedHeaders': ["sessionId", 'Content-Type'],
+    "exposedHeaders": ["sessionId"],
+    "origin": '*',
+    "methods": "GET, HEAD, PUT, PATCH, POST, DELETE",
+    "preflightContinue": false
+    }));
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/v1/",apiv1);
